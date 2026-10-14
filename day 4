@@ -1,0 +1,64 @@
+use testdb;
+show database;
+create database if not exists big_data;
+create schema if not exists test_schema;
+use  schema test_schema;
+ create table if not exists test(id int,name varchar(20), age int);
+ select * from test;
+
+ create table if not exists test1(id int, name varchar(20),age int,code varchar(20));
+
+insert into test1 select id , name , age , substr(name,0,3) from test;
+select * from  test1;
+
+
+create stage internal_stage;
+desc stage internal_stage;
+
+list @internal_stage;
+
+create table if not exists test2(id int , name varchar(10),age int );
+
+copy into  test2 from @internal_stage/testdata.cs
+file_format=(skip_header=1);
+
+select * from test2;
+
+create table if not exists test3(id int , name varchar(10),age int , code varchar(10));
+  copy into test3 from (select $1,$2, $3 , substr($2,0,3) from  @internal_stage/testdata.csv)
+  file_format=(skip_header=1);
+  select * from test3;
+
+
+  CREATE OR REPLACE STAGE my_s3_stage
+  URL = 's3://testdata12365/'
+  CREDENTIALS = (AWS_KEY_ID = '*********' AWS_SECRET_KEY = 'A7oZpHu/q0Rx6k2Rj7N3Jldk1b4V4/M/D6o4q7N1')
+  file_format=(skip_header=1);
+
+
+create table if not exists test4(id int , name varchar(10),age int , code varchar(10));
+  copy into test4 from (select $1,$2, $3 , substr($2,0,3) from  @my_s3_stage)
+  file_format=(skip_header=1);
+  select * from test3;
+select* from test4;
+  
+create table if not exists test5(id int , name varchar(10),age int , code varchar(10));
+  copy into test5 from (select $1,$2, $3 , substr($2,0,3) from  @my_s3_stage)
+  file_format=(skip_header=1)
+  ON_ERROR = 'CONTINUE';
+  select * from test5;
+
+
+
+create table if not exists test8(id int , name varchar(10),age int );
+  copy into test8 from (select $1,$2, $3  from  @my_s3_stage)
+  file_format=(skip_header=1)
+  ON_ERROR = 'SKIP_FILE_4';
+  select * from test8;
+
+  
+create table if not exists test9(id int , name varchar(10),age int );
+  copy into test9 from (select $1,$2, $3  from  @my_s3_stage)
+  file_format=(skip_header=1)
+  ON_ERROR = 'SKIP_FILE_70%';
+  select * from test9;
