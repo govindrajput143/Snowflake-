@@ -1,0 +1,51 @@
+Data Engineering:
+It is a process where we move the data from one source to another, while transforming, cleaning the data and prepare for businesses.
+It is more about research and excueting.
+
+
+Data Warehouse:
+centralized location/ repo where we stored the data from multiple sources. basically it is used to store historical data
+it is non volatile.
+Characterstics of Datawarehouse: historical data, time travel, non volatile, subject_oriented.
+
+
+It collects, integrates, and large volume of current and historical data from diverse source to support business Intelligence, 
+reporting and data analysis.
+ETL tool will work as mediator to insert the data in data warehouse, a data can be from any source ERP's, CRM's and any type csv's, json's,
+xlxs, of any type.
+
+SPOT : 
+single point of truth(End user can use data from Datawarehouse.)
+
+Batch processing:
+ 
+DataMart:
+It is subdivision of Datawarehouse. to reduce cost, to serve the reporting and analytical needs of a specific department.
+benefits are smaller size and targeted schemas design to lead quicker data, easy access, cost efficiency.
+
+
+to do list:
+00777
+
+     
+
+
+
+
+day 3
+show database;
+create database  if not exists testdb;
+use testdb;
+create schema if not exists  test_schema;
+use schema test_schema;
+create table if not exists test_table(id int);
+insert into test_table values(1000);
+select * from test_table;
+
+create table if not exists test_table2(id int , name varchar(30),age int);
+show tables;
+select * from test_table2;
+
+create table if not exists test_table3(id int , age int ,code varchar(20));
+insert into test_table3 select id , age, substr(name ,0,3) from test_table2;
+select * from test_table3;
